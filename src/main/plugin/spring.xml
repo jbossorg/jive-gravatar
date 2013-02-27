@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd"
+  default-autowire="no" default-init-method="init" default-destroy-method="destroy">
+
+  <bean id="gravatarManager" class="org.jboss.community.sbs.plugin.gravatar.GravatarManagerImpl">
+    <property name="md5Encoder" ref="md5Encoder" />
+    <property name="userManager" ref="userManagerImpl" />
+    <property name="gravatarDAO" ref="gravatarDAO" />
+  </bean>
+
+  <bean id="md5Encoder" class="org.acegisecurity.providers.encoding.Md5PasswordEncoder" />
+
+  <bean id="gravatarDAO" class="org.jboss.community.sbs.plugin.gravatar.dao.DbGravatarDAOImpl">
+    <property name="dataSource">
+      <util:property-path path="dataSourceFactory.dataSource" />
+    </property>
+  </bean>
+
+</beans>
