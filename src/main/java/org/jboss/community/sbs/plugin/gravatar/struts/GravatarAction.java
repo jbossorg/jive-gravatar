@@ -5,6 +5,8 @@
  */
 package org.jboss.community.sbs.plugin.gravatar.struts;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.jboss.community.sbs.plugin.gravatar.GravatarManager;
 
 import com.jivesoftware.community.action.UserAvatarAction;
@@ -25,6 +27,8 @@ public class GravatarAction extends UserAvatarAction {
 
 	private static final long serialVersionUID = 3823341890793708625L;
 
+	protected static final Logger log = LogManager.getLogger(GravatarAction.class);
+
 	private String avatarHash;
 
 	/**
@@ -36,6 +40,9 @@ public class GravatarAction extends UserAvatarAction {
 
 	@Override
 	public String execute() {
+		if (log.isDebugEnabled()) {
+			log.debug("Get Gravatar for hash: " + avatarHash + ", size: " + s);
+		}
 		Long userID = gravatarManager.getUsername(avatarHash);
 		if (userID != null) {
 			setUserID(userID);

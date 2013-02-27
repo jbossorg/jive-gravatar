@@ -1,9 +1,12 @@
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="http://www.jivesoftware.com/schemas/clearspace/1_1/plugin.xsd">
-  <name>gravatar</name>
-  <description>Jive SBS Avatars under Gravatar's style URL</description>
-  <author>JBoss Community</author>
-  <version>1.0.0</version>
-  <minServerVersion>4.5.0</minServerVersion>
+	<name>gravatar</name>
+	<description>Jive SBS Avatars under Gravatar's style URL</description>
+	<author>JBoss Community</author>
+	<version>1.1.0</version>
+	<minServerVersion>4.5.0</minServerVersion>
+
+	<!-- Plugin class -->
+	<class>org.jboss.community.sbs.plugin.gravatar.GravatarPlugin</class>
 
 </plugin>
