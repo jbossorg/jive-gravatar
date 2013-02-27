@@ -27,83 +27,83 @@ import com.jivesoftware.base.event.v2.EventListener;
  */
 public class GravatarManagerImpl implements GravatarManager, EventListener<UserEvent> {
 
-  protected static final Logger log = LogManager.getLogger(GravatarManagerImpl.class);
+	protected static final Logger log = LogManager.getLogger(GravatarManagerImpl.class);
 
-  private UserManager userManager;
+	private UserManager userManager;
 
-  private GravatarDAO gravatarDAO;
+	private GravatarDAO gravatarDAO;
 
-  private Md5PasswordEncoder md5Encoder;
+	private Md5PasswordEncoder md5Encoder;
 
-  /**
-   * Map of e-mail hashes. Key is email hash and value is user ID
-   * 
-   * @see #getEmailHash(String)
-   */
-  private Map<String, Long> emailHashMap = null;
+	/**
+	 * Map of e-mail hashes. Key is email hash and value is user ID
+	 * 
+	 * @see #getEmailHash(String)
+	 */
+	private Map<String, Long> emailHashMap = null;
 
-  private void initializeHashes() {
-    emailHashMap = new HashMap<String, Long>();
-    log.info("Initialize hashes for Gravatar plugin");
+	private void initializeHashes() {
+		emailHashMap = new HashMap<String, Long>();
+		log.info("Initialize hashes for Gravatar plugin");
 
-    List<Long> users = gravatarDAO.getUsersWithAvatar();
+		List<Long> users = gravatarDAO.getUsersWithAvatar();
 
-    for (Long userID : users) {
-      User user;
-      try {
-        user = userManager.getUser(userID);
-        emailHashMap.put(getEmailHash(user.getEmail()), userID);
-      } catch (UserNotFoundException e) {
-        log.warn("Cannot load user for Gravatar plugin", e);
-      }
-    }
+		for (Long userID : users) {
+			User user;
+			try {
+				user = userManager.getUser(userID);
+				emailHashMap.put(getEmailHash(user.getEmail()), userID);
+			} catch (UserNotFoundException e) {
+				log.warn("Cannot load user for Gravatar plugin", e);
+			}
+		}
 
-    if (log.isInfoEnabled()) {
-      log.info("Hashes count: " + emailHashMap.size());
-    }
-    log.info("Hashes for Gravatar plugin generated");
-  }
+		if (log.isInfoEnabled()) {
+			log.info("Hashes count: " + emailHashMap.size());
+		}
+		log.info("Hashes for Gravatar plugin generated");
+	}
 
-  public void clearEmailHashCache() {
-    emailHashMap = null;
-  }
+	public void clearEmailHashCache() {
+		emailHashMap = null;
+	}
 
-  /**
-   * Based on http://en.gravatar.com/site/implement/hash/
-   * 
-   * @param email
-   * @return
-   */
-  protected String getEmailHash(String email) {
-    String normalizedEmail = email.trim().toLowerCase();
-    return md5Encoder.encodePassword(normalizedEmail, null);
-  }
+	/**
+	 * Based on http://en.gravatar.com/site/implement/hash/
+	 * 
+	 * @param email
+	 * @return
+	 */
+	protected String getEmailHash(String email) {
+		String normalizedEmail = email.trim().toLowerCase();
+		return md5Encoder.encodePassword(normalizedEmail, null);
+	}
 
-  public void handle(UserEvent e) {
-    switch (e.getType()) {
-    case CREATED:
-      clearEmailHashCache();
-    }
-  };
+	public void handle(UserEvent e) {
+		switch (e.getType()) {
+			case CREATED:
+				clearEmailHashCache();
+		}
+	};
 
-  @Override
-  public Long getUsername(String emailHash) {
-    if (emailHashMap == null) {
-      initializeHashes();
-    }
-    return emailHashMap.get(emailHash);
-  }
+	@Override
+	public Long getUsername(String emailHash) {
+		if (emailHashMap == null) {
+			initializeHashes();
+		}
+		return emailHashMap.get(emailHash);
+	}
 
-  public void setUserManager(UserManager userManager) {
-    this.userManager = userManager;
-  }
+	public void setUserManager(UserManager userManager) {
+		this.userManager = userManager;
+	}
 
-  public void setMd5Encoder(Md5PasswordEncoder md5Encoder) {
-    this.md5Encoder = md5Encoder;
-  }
+	public void setMd5Encoder(Md5PasswordEncoder md5Encoder) {
+		this.md5Encoder = md5Encoder;
+	}
 
-  public void setGravatarDAO(GravatarDAO gravatarDAO) {
-    this.gravatarDAO = gravatarDAO;
-  }
+	public void setGravatarDAO(GravatarDAO gravatarDAO) {
+		this.gravatarDAO = gravatarDAO;
+	}
 
 }

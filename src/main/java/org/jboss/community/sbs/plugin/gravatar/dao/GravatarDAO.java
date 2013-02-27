@@ -17,11 +17,11 @@ import com.jivesoftware.community.impl.dao.AvatarDAO;
  */
 public interface GravatarDAO {
 
-  /**
-   * Get list of users which have custom avatar
-   * 
-   * @return
-   */
-  public List<Long> getUsersWithAvatar();
+	/**
+	 * Get list of users which have custom avatar
+	 * 
+	 * @return
+	 */
+	public List<Long> getUsersWithAvatar();
 
 }

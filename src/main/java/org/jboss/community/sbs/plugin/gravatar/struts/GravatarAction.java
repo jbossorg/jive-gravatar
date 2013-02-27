@@ -23,43 +23,43 @@ import com.jivesoftware.community.web.struts.SetReferer;
 @SetReferer(false)
 public class GravatarAction extends UserAvatarAction {
 
-  private static final long serialVersionUID = 3823341890793708625L;
+	private static final long serialVersionUID = 3823341890793708625L;
 
-  private String avatarHash;
+	private String avatarHash;
 
-  /**
-   * Avatar size
-   */
-  private Integer s;
+	/**
+	 * Avatar size
+	 */
+	private Integer s;
 
-  private GravatarManager gravatarManager;
+	private GravatarManager gravatarManager;
 
-  @Override
-  public String execute() {
-    Long userID = gravatarManager.getUsername(avatarHash);
-    if (userID != null) {
-      setUserID(userID);
-    }
-    if (s != null) {
-      setSize(s);
-    }
+	@Override
+	public String execute() {
+		Long userID = gravatarManager.getUsername(avatarHash);
+		if (userID != null) {
+			setUserID(userID);
+		}
+		if (s != null) {
+			setSize(s);
+		}
 
-    return super.execute();
-  }
+		return super.execute();
+	}
 
-  public void setAvatarHash(String avatarHash) {
-    this.avatarHash = avatarHash;
-  }
+	public void setAvatarHash(String avatarHash) {
+		this.avatarHash = avatarHash;
+	}
 
-  public void setS(Integer s) {
-    this.s = s;
-  }
+	public void setS(Integer s) {
+		this.s = s;
+	}
 
-  public Integer getS() {
-    return s;
-  }
+	public Integer getS() {
+		return s;
+	}
 
-  public void setGravatarManager(GravatarManager gravatarManager) {
-    this.gravatarManager = gravatarManager;
-  }
+	public void setGravatarManager(GravatarManager gravatarManager) {
+		this.gravatarManager = gravatarManager;
+	}
 }

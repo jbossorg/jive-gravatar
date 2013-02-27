@@ -16,10 +16,10 @@ import com.jivesoftware.base.database.dao.JiveJdbcDaoSupport;
  */
 public class DbGravatarDAOImpl extends JiveJdbcDaoSupport implements GravatarDAO {
 
-  @Override
-  public List<Long> getUsersWithAvatar() {
-    String sql = "SELECT userID FROM jiveAvatarUser";
-    return getSimpleJdbcTemplate().query(sql, LongRowMapper.getLongRowMapper());
-  }
+	@Override
+	public List<Long> getUsersWithAvatar() {
+		String sql = "SELECT userID FROM jiveAvatarUser";
+		return getSimpleJdbcTemplate().query(sql, LongRowMapper.getLongRowMapper());
+	}
 
 }

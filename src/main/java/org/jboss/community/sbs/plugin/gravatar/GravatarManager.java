@@ -11,13 +11,13 @@ package org.jboss.community.sbs.plugin.gravatar;
  */
 public interface GravatarManager {
 
-  /**
-   * Get username based on e-mail hash
-   * 
-   * @param emailHash
-   * @return
-   * @see http://en.gravatar.com/site/implement/hash/
-   */
-  public Long getUsername(String emailHash);
+	/**
+	 * Get username based on e-mail hash
+	 * 
+	 * @param emailHash
+	 * @return
+	 * @see http://en.gravatar.com/site/implement/hash/
+	 */
+	public Long getUsername(String emailHash);
 
 }
