@@ -79,6 +79,7 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 		return md5Encoder.encodePassword(normalizedEmail, null);
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	public void handle(UserEvent e) {
 		switch (e.getType()) {
 			case CREATED:
