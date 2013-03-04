@@ -1,7 +1,7 @@
 Jive SBS Gravatar Plugin 
 ========================
 
-Jive SBS Plugin provides avatars under Gravatar's stile URLs.
+Jive SBS Plugin provides avatars under Gravatar's style URLs.
 
 Base gravatar url is `/gravatar/{emailhash}`
 
