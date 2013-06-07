@@ -7,7 +7,7 @@ package org.jboss.community.sbs.plugin.gravatar;
 
 import static org.junit.Assert.assertEquals;
 
-import org.acegisecurity.providers.encoding.Md5PasswordEncoder;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.junit.Test;
 
 public class GravatarManagerImplTest {

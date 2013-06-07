@@ -5,24 +5,23 @@
  */
 package org.jboss.community.sbs.plugin.gravatar;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.acegisecurity.providers.encoding.Md5PasswordEncoder;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.jboss.community.sbs.plugin.gravatar.dao.GravatarDAO;
-
 import com.jivesoftware.base.User;
 import com.jivesoftware.base.UserManager;
 import com.jivesoftware.base.UserNotFoundException;
 import com.jivesoftware.base.event.UserEvent;
 import com.jivesoftware.base.event.v2.EventListener;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.jboss.community.sbs.plugin.gravatar.dao.GravatarDAO;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of Gravatar manager.
- * 
+ *
  * @author Libor Krzyzanek (lkrzyzan)
  */
 public class GravatarManagerImpl implements GravatarManager, EventListener<UserEvent> {
@@ -37,7 +36,7 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 
 	/**
 	 * Map of e-mail hashes. Key is email hash and value is user ID
-	 * 
+	 *
 	 * @see #getEmailHash(String)
 	 */
 	private Map<String, Long> emailHashMap = null;
@@ -54,7 +53,7 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 				user = userManager.getUser(userID);
 				emailHashMap.put(getEmailHash(user.getEmail()), userID);
 			} catch (UserNotFoundException e) {
-				log.warn("Cannot load user for Gravatar plugin", e);
+				log.warn("Cannot load user for Gravatar plugin, userId: " + userID);
 			}
 		}
 
@@ -70,7 +69,7 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 
 	/**
 	 * Based on http://en.gravatar.com/site/implement/hash/
-	 * 
+	 *
 	 * @param email
 	 * @return
 	 */
@@ -85,7 +84,9 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 			case CREATED:
 				clearEmailHashCache();
 		}
-	};
+	}
+
+	;
 
 	@Override
 	public Long getUsername(String emailHash) {
