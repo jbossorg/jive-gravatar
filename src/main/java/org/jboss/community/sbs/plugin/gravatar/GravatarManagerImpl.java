@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jivesoftware.base.User;
 import com.jivesoftware.base.UserManager;
 import com.jivesoftware.base.event.UserEvent;
 import com.jivesoftware.base.event.v2.EventListener;
@@ -73,9 +74,16 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 
 	@SuppressWarnings("incomplete-switch")
 	public void handle(UserEvent e) {
+		User user = e.getPayload();
 		switch (e.getType()) {
 			case CREATED:
-				clearEmailHashCache();
+				log.debug("New account created. Going to add new hash");
+				emailHashMap.put(getEmailHash(user.getEmail()), user.getID());
+				break;
+			case PURGE_COMPLETE:
+				log.debug("Account purge completed. Going to add new hash");
+				emailHashMap.remove(getEmailHash(user.getEmail()));
+				break;
 		}
 	}
 
