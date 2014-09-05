@@ -20,4 +20,18 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 		</property>
 	</bean>
 
+	<bean id="documentExpirationTask" class="com.jivesoftware.community.lifecycle.spring.task.SimpleTaskDefinitionBean">
+		<property name="priority">
+			<util:constant static-field="com.jivesoftware.util.task.TaskEngine.LOW_PRIORITY"/>
+		</property>
+		<property name="task">
+			<bean class="org.jboss.community.sbs.plugin.gravatar.RefreshCacheTask">
+				<property name="gravatarManager" ref="gravatarManager"/>
+			</bean>
+		</property>
+		<property name="period">
+			<util:constant static-field="com.jivesoftware.community.JiveConstants.HOUR"/>
+		</property>
+	</bean>
+
 </beans>

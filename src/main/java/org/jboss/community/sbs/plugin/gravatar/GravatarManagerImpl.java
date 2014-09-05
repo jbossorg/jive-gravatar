@@ -41,7 +41,8 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 	 */
 	private Map<String, Long> emailHashMap = null;
 
-	private void initializeHashes() {
+	@Override
+	public void initializeHashes() {
 		emailHashMap = new HashMap<String, Long>();
 		log.info("Initialize hashes for Gravatar plugin");
 
@@ -55,10 +56,6 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 			log.info("Hashes count: " + emailHashMap.size());
 		}
 		log.info("Hashes for Gravatar plugin generated");
-	}
-
-	public void clearEmailHashCache() {
-		emailHashMap = null;
 	}
 
 	/**
@@ -81,7 +78,7 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 				emailHashMap.put(getEmailHash(user.getEmail()), user.getID());
 				break;
 			case PURGE_COMPLETE:
-				log.debug("Account purge completed. Going to add new hash");
+				log.debug("Account purge completed. Going to remove existing hash");
 				emailHashMap.remove(getEmailHash(user.getEmail()));
 				break;
 		}
