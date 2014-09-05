@@ -28,8 +28,6 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 
 	protected static final Logger log = LogManager.getLogger(GravatarManagerImpl.class);
 
-	private UserManager userManager;
-
 	private GravatarDAO gravatarDAO;
 
 	private Md5PasswordEncoder md5Encoder;
@@ -90,10 +88,6 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 			initializeHashes();
 		}
 		return emailHashMap.get(emailHash);
-	}
-
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
 	}
 
 	public void setMd5Encoder(Md5PasswordEncoder md5Encoder) {
