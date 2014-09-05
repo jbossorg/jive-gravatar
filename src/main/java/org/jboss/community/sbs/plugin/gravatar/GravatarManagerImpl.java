@@ -5,19 +5,18 @@
  */
 package org.jboss.community.sbs.plugin.gravatar;
 
-import com.jivesoftware.base.User;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.jivesoftware.base.UserManager;
-import com.jivesoftware.base.UserNotFoundException;
 import com.jivesoftware.base.event.UserEvent;
 import com.jivesoftware.base.event.v2.EventListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.jboss.community.sbs.plugin.gravatar.dao.DbGravatarDAOImpl;
 import org.jboss.community.sbs.plugin.gravatar.dao.GravatarDAO;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Implementation of Gravatar manager.
@@ -45,16 +44,10 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 		emailHashMap = new HashMap<String, Long>();
 		log.info("Initialize hashes for Gravatar plugin");
 
-		List<Long> users = gravatarDAO.getUsersWithAvatar();
+		List<DbGravatarDAOImpl.UserIdEmailBean> userEmailsWithAvatar = gravatarDAO.getUserEmailsWithAvatar();
 
-		for (Long userID : users) {
-			User user;
-			try {
-				user = userManager.getUser(userID);
-				emailHashMap.put(getEmailHash(user.getEmail()), userID);
-			} catch (UserNotFoundException e) {
-				log.warn("Cannot load user for Gravatar plugin, userId: " + userID);
-			}
+		for (DbGravatarDAOImpl.UserIdEmailBean entity : userEmailsWithAvatar) {
+			emailHashMap.put(getEmailHash(entity.email), entity.userID);
 		}
 
 		if (log.isInfoEnabled()) {
@@ -85,8 +78,6 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 				clearEmailHashCache();
 		}
 	}
-
-	;
 
 	@Override
 	public Long getUsername(String emailHash) {

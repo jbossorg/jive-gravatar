@@ -11,17 +11,16 @@ import com.jivesoftware.community.impl.dao.AvatarDAO;
 
 /**
  * DAO for Gravatar plugin. Includes mainly helper methods for {@link AvatarDAO}
- * 
+ *
  * @author Libor Krzyzanek (lkrzyzan)
- * 
  */
 public interface GravatarDAO {
 
 	/**
-	 * Get list of users which have custom avatar
-	 * 
-	 * @return
+	 * Get list of user's e-mails which have custom avatar
+	 *
+	 * @return list of UserIdEmailBean
 	 */
-	public List<Long> getUsersWithAvatar();
+	public List<DbGravatarDAOImpl.UserIdEmailBean> getUserEmailsWithAvatar();
 
 }

@@ -9,7 +9,7 @@
 	<name>Jive plugin: Gravatar</name>
 	<description>Jive avatars under Gravatar URLs</description>
 	<url>https://github.com/jbossorg/jive-gravatar</url>
-	<version>2.0.0</version>
+	<version>2.1.0</version>
 
 	<inceptionYear>2011</inceptionYear>
 	<licenses>
