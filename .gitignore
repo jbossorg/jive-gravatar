@@ -5,7 +5,7 @@
 .project
 .classpath
 .idea
-.iml
+*.iml
 
 # Package Files #
 *.jar
