@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.jivesoftware.base.User;
-import com.jivesoftware.base.UserManager;
 import com.jivesoftware.base.event.UserEvent;
 import com.jivesoftware.base.event.v2.EventListener;
 import org.apache.log4j.LogManager;
@@ -41,7 +40,7 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 
 	@Override
 	public void initializeHashes() {
-		emailHashMap = new HashMap<String, Long>();
+		emailHashMap = new HashMap<>();
 		log.info("Initialize hashes for Gravatar plugin");
 
 		List<DbGravatarDAOImpl.UserIdEmailBean> userEmailsWithAvatar = gravatarDAO.getUserEmailsWithAvatar();
@@ -73,11 +72,16 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 		switch (e.getType()) {
 			case CREATED:
 				log.debug("New account created. Going to add new hash");
+				if (emailHashMap == null) {
+					emailHashMap = new HashMap<>();
+				}
 				emailHashMap.put(getEmailHash(user.getEmail()), user.getID());
 				break;
 			case PURGE_COMPLETE:
 				log.debug("Account purge completed. Going to remove existing hash");
-				emailHashMap.remove(getEmailHash(user.getEmail()));
+				if (emailHashMap != null) {
+					emailHashMap.remove(getEmailHash(user.getEmail()));
+				}
 				break;
 		}
 	}
