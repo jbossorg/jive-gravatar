@@ -53,9 +53,9 @@ public class GravatarURLMapping implements NamespacedURLMapping {
 			log.debug("Process uri: " + uri + ", mapping params: " + mapping.getParams());
 		}
 		String[] uriElements = uri.split("/");
-		Map<String, String> params = mapping.getParams();
+		Map<String, Object> params = mapping.getParams();
 		if (null == params) {
-			params = new HashMap<String, String>();
+			params = new HashMap<>();
 		}
 
 		if (log.isDebugEnabled()) {
