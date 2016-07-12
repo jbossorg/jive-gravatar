@@ -9,8 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.jivesoftware.base.database.dao.JiveJdbcDaoSupport;
 import org.springframework.jdbc.core.RowMapper;
+
+import com.jivesoftware.base.database.dao.JiveJdbcDaoSupport;
 
 /**
  * @author Libor Krzyzanek
@@ -19,7 +20,7 @@ public class DbGravatarDAOImpl extends JiveJdbcDaoSupport implements GravatarDAO
 
 	@Override
 	public List<UserIdEmailBean> getUserEmailsWithAvatar() {
-		String sql = "SELECT ju.userID, ju.email FROM jiveAvatarUser ja join jive.jiveuser ju on ju.userID = ja.userID;";
+		String sql = "SELECT ju.userID, ju.email FROM jiveAvatarUser ja join jiveUser ju on ju.userID = ja.userID;";
 		return getSimpleJdbcTemplate().query(sql, new RowMapper<UserIdEmailBean>() {
 			@Override
 			public UserIdEmailBean mapRow(ResultSet rs, int rowNum) throws SQLException {

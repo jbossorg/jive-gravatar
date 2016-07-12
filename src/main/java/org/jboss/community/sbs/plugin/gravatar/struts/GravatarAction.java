@@ -10,8 +10,7 @@ import org.apache.log4j.Logger;
 import org.jboss.community.sbs.plugin.gravatar.GravatarManager;
 
 import com.jivesoftware.community.action.UserAvatarAction;
-//import com.jivesoftware.community.license.annotations.LicensePageViewHint;
-//import com.jivesoftware.community.license.metering.pageview.impl.JivePageViewHint;
+import com.jivesoftware.community.action.util.AlwaysAllowAnonymous;
 import com.jivesoftware.community.web.struts.SetReferer;
 
 /**
@@ -20,10 +19,8 @@ import com.jivesoftware.community.web.struts.SetReferer;
  * @see http://en.gravatar.com/site/implement/images/
  * @author <a href="mailto:lkrzyzan@redhat.com">Libor Krzyzanek</a>
  */
-// TODO: Check how  @LicensePageViewHint can be used in Jive 6
-//@LicensePageViewHint(hint = { JivePageViewHint.never })
-// never score as a pageview
 @SetReferer(false)
+@AlwaysAllowAnonymous
 public class GravatarAction extends UserAvatarAction {
 
 	private static final long serialVersionUID = 3823341890793708625L;
