@@ -32,9 +32,14 @@ public class GravatarAction extends UserAvatarAction {
 	/**
 	 * Avatar size
 	 */
-	private Integer s;
+	private Integer[] s;
 
 	private GravatarManager gravatarManager;
+
+	@Override
+	public String input() {
+		return this.execute();
+	}
 
 	@Override
 	public String execute() {
@@ -45,8 +50,8 @@ public class GravatarAction extends UserAvatarAction {
 		if (userID != null) {
 			setUserID(userID);
 		}
-		if (s != null) {
-			setSize(s);
+		if (s != null && s.length > 0) {
+			setSize(s[0]);
 		}
 
 		return super.execute();
@@ -56,11 +61,11 @@ public class GravatarAction extends UserAvatarAction {
 		this.avatarHash = avatarHash;
 	}
 
-	public void setS(Integer s) {
+	public void setS(Integer[] s) {
 		this.s = s;
 	}
 
-	public Integer getS() {
+	public Integer[] getS() {
 		return s;
 	}
 

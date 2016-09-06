@@ -78,6 +78,7 @@ public class GravatarURLMapping implements NamespacedURLMapping {
 		mapping.setName("gravatar");
 		mapping.setNamespace("/gravatar-actions");
 		mapping.setParams(params);
+		mapping.setMethod("execute");
 	}
 
 	@Override
