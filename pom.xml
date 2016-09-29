@@ -9,7 +9,7 @@
 	<name>gravatar</name>
 	<description>Jive avatars under Gravatar URLs</description>
 	<url>https://github.com/jbossorg/jive-gravatar</url>
-	<version>8.0.1</version>
+	<version>8.0.2</version>
 
 	<parent>
 		<groupId>com.jivesoftware.maven</groupId>

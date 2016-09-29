@@ -9,6 +9,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 	<bean id="gravatarManager" class="org.jboss.community.sbs.plugin.gravatar.GravatarManagerImpl">
 		<property name="md5Encoder" ref="md5Encoder"/>
 		<property name="gravatarDAO" ref="gravatarDAO"/>
+		<property name="userManager" ref="userManager"/>
 	</bean>
 
 	<bean id="md5Encoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
@@ -19,18 +20,18 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 		</property>
 	</bean>
 
-	<bean id="documentExpirationTask" class="com.jivesoftware.community.lifecycle.spring.task.SimpleTaskDefinitionBean">
-		<property name="priority">
-			<util:constant static-field="com.jivesoftware.util.task.TaskEngine.LOW_PRIORITY"/>
-		</property>
-		<property name="task">
-			<bean class="org.jboss.community.sbs.plugin.gravatar.RefreshCacheTask">
-				<property name="gravatarManager" ref="gravatarManager"/>
-			</bean>
-		</property>
-		<property name="period">
-			<util:constant static-field="com.jivesoftware.community.JiveConstants.HOUR"/>
-		</property>
+	<bean id="gravatarRefreshPeriodTask" class="com.jivesoftware.base.taskmanager.AutoStartFixedPeriodTask">
+		<property name="allNodes" value="true"/>
+		<property name="beanName" value="gravatarRefreshTask"/>
+		<property name="methodName" value="run"/>
+		<property name="switchProperty" value="gravatarRefresh.enabled"/>
+		<property name="switchPropertyDefault" value="true"/>
+		<property name="period" value="1"/>
+		<property name="timeUnit" ref="HOURS"/>
+	</bean>
+
+	<bean id="gravatarRefreshTask" class="org.jboss.community.sbs.plugin.gravatar.RefreshCacheTask">
+		<property name="gravatarManager" ref="gravatarManager"/>
 	</bean>
 
 </beans>

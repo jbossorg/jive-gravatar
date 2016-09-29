@@ -5,24 +5,34 @@
  */
 package org.jboss.community.sbs.plugin.gravatar;
 
+import java.util.Map;
+
 /**
  * @author Libor Krzyzanek
  */
 public interface GravatarManager {
 
-	/**
-	 * Get username based on e-mail hash
-	 *
-	 * @param emailHash
-	 * @return
-	 * @see http://en.gravatar.com/site/implement/hash/
-	 */
-	public Long getUsername(String emailHash);
+    /**
+     * Get username based on e-mail hash
+     *
+     * @param emailHash
+     * @return
+     * @see http://en.gravatar.com/site/implement/hash/
+     */
+    public Long getUsername(String emailHash);
 
+    /**
+     * Generate hashes
+     *
+     * @return new map with gravatar hashes
+     */
+    public Map<String, Long> generateHashes();
 
-	/**
-	 * Initialize hashes
-	 */
-	public void initializeHashes();
+    /**
+     * Set new email hash map
+     *
+     * @param emailHashMap
+     */
+    public void setEmailHashMap(Map<String, Long> emailHashMap);
 
 }

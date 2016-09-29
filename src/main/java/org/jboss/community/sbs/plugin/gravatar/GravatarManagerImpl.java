@@ -9,25 +9,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.jivesoftware.base.User;
-import com.jivesoftware.base.event.UserEvent;
-import com.jivesoftware.base.event.v2.EventListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.jboss.community.sbs.plugin.gravatar.dao.DbGravatarDAOImpl;
 import org.jboss.community.sbs.plugin.gravatar.dao.GravatarDAO;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+
+import com.jivesoftware.base.User;
+import com.jivesoftware.base.UserManager;
+import com.jivesoftware.base.UserNotFoundException;
+import com.jivesoftware.base.event.v2.EventListener;
+import com.jivesoftware.community.event.AvatarEvent;
 
 /**
  * Implementation of Gravatar manager.
  *
  * @author Libor Krzyzanek (lkrzyzan)
  */
-public class GravatarManagerImpl implements GravatarManager, EventListener<UserEvent> {
+public class GravatarManagerImpl implements GravatarManager, EventListener<AvatarEvent> {
 
 	protected static final Logger log = LogManager.getLogger(GravatarManagerImpl.class);
 
 	private GravatarDAO gravatarDAO;
+
+    private UserManager userManager;
 
 	private Md5PasswordEncoder md5Encoder;
 
@@ -36,23 +42,20 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 	 *
 	 * @see #getEmailHash(String)
 	 */
-	private Map<String, Long> emailHashMap = null;
+	private Map<String, Long> emailHashMap = new HashMap<>();
 
 	@Override
-	public void initializeHashes() {
-		emailHashMap = new HashMap<>();
+	public Map<String, Long> generateHashes() {
+		HashMap<String, Long> map = new HashMap<>();
 		log.info("Initialize hashes for Gravatar plugin");
 
 		List<DbGravatarDAOImpl.UserIdEmailBean> userEmailsWithAvatar = gravatarDAO.getUserEmailsWithAvatar();
 
 		for (DbGravatarDAOImpl.UserIdEmailBean entity : userEmailsWithAvatar) {
-			emailHashMap.put(getEmailHash(entity.email), entity.userID);
+			map.put(getEmailHash(entity.email), entity.userID);
 		}
 
-		if (log.isInfoEnabled()) {
-			log.info("Hashes count: " + emailHashMap.size());
-		}
-		log.info("Hashes for Gravatar plugin generated");
+		return map;
 	}
 
 	/**
@@ -67,39 +70,59 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<UserE
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	public void handle(UserEvent e) {
-		User user = e.getPayload();
-		switch (e.getType()) {
-			case CREATED:
-				log.debug("New account created. Going to add new hash");
-				if (emailHashMap == null) {
-					emailHashMap = new HashMap<>();
+	public void handle(AvatarEvent e) {
+		if (log.isTraceEnabled()) {
+			log.trace("Avatar event captured: " + e);
+		}
+		// see DbAvatarManager.fireActiveAvatarModified(User, Avatar, Map<String, ?>)
+        if (e.getType() == AvatarEvent.Type.MODIFIED) {
+			Long userID = (Long) e.getParams().get("userID");
+
+			try {
+				User user = userManager.getUser(userID);
+
+				if (log.isDebugEnabled()) {
+					log.debug("Avatar modified. Going to add new hash for user id: " + user.getID());
 				}
-				emailHashMap.put(getEmailHash(user.getEmail()), user.getID());
-				break;
-			case PURGE_COMPLETE:
-				log.debug("Account purge completed. Going to remove existing hash");
-				if (emailHashMap != null) {
-					emailHashMap.remove(getEmailHash(user.getEmail()));
+				synchronized (emailHashMap) {
+					emailHashMap.putIfAbsent(getEmailHash(user.getEmail()), user.getID());
 				}
-				break;
+			} catch (UserNotFoundException e1) {
+				log.error("cannot find user", e1);
+			}
 		}
 	}
 
 	@Override
 	public Long getUsername(String emailHash) {
-		if (emailHashMap == null) {
-			initializeHashes();
+		if (emailHashMap.isEmpty()) {
+			synchronized (emailHashMap) {
+				emailHashMap = generateHashes();
+				if (log.isInfoEnabled()) {
+					log.info("Hashes for Gravatar plugin generated. Count: " + emailHashMap.size());
+				}
+			}
 		}
 		return emailHashMap.get(emailHash);
 	}
 
+	@Override
+	public void setEmailHashMap(Map<String, Long> emailHashMap) {
+		this.emailHashMap = emailHashMap;
+	}
+
+	@Required
 	public void setMd5Encoder(Md5PasswordEncoder md5Encoder) {
 		this.md5Encoder = md5Encoder;
 	}
 
+	@Required
 	public void setGravatarDAO(GravatarDAO gravatarDAO) {
 		this.gravatarDAO = gravatarDAO;
 	}
 
+	@Required
+	public void setUserManager(UserManager userManager) {
+		this.userManager = userManager;
+	}
 }

@@ -44,7 +44,7 @@ public class GravatarAction extends UserAvatarAction {
 	@Override
 	public String execute() {
 		if (log.isDebugEnabled()) {
-			log.debug("Get Gravatar for hash: " + avatarHash + ", size: " + s);
+			log.debug("Get Gravatar for hash: " + avatarHash + ", size: " + (s != null && s.length > 0 ? s[0] : "n/a"));
 		}
 		Long userID = gravatarManager.getUsername(avatarHash);
 		if (userID != null) {
