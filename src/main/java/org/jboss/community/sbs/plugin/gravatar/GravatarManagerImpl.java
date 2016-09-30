@@ -77,18 +77,21 @@ public class GravatarManagerImpl implements GravatarManager, EventListener<Avata
 		// see DbAvatarManager.fireActiveAvatarModified(User, Avatar, Map<String, ?>)
         if (e.getType() == AvatarEvent.Type.MODIFIED) {
 			Long userID = (Long) e.getParams().get("userID");
-
+			User user = null;
 			try {
-				User user = userManager.getUser(userID);
+				user = userManager.getUser(userID);
 
 				if (log.isDebugEnabled()) {
 					log.debug("Avatar modified. Going to add new hash for user id: " + user.getID());
 				}
+				String hash = getEmailHash(user.getEmail());
 				synchronized (emailHashMap) {
-					emailHashMap.putIfAbsent(getEmailHash(user.getEmail()), user.getID());
+					emailHashMap.putIfAbsent(hash, user.getID());
 				}
 			} catch (UserNotFoundException e1) {
 				log.error("cannot find user", e1);
+			} catch (Exception e1) {
+				log.error("Unknown error when adding gravatar hash for user: " + user);
 			}
 		}
 	}
